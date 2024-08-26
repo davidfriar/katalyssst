@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./globals.css"
 import { client } from "@/sanity/lib/client"
 import { SITEINFO_QUERY } from "@/sanity/lib/queries"
 
