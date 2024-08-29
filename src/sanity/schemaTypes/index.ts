@@ -5,7 +5,16 @@ import blockContent from "./blockContent"
 import customImage from "./customImage"
 import playlist from "./playlist"
 import tiktok from "./tiktok"
+import video from "./video"
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [siteInfo, photoSet, customImage, playlist, tiktok, blockContent],
+  types: [
+    siteInfo,
+    photoSet,
+    customImage,
+    playlist,
+    tiktok,
+    blockContent,
+    video,
+  ],
 }

@@ -1,0 +1,10 @@
+.footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer p {
+  font-size: var(--font-size-0);
+}

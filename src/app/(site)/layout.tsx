@@ -1,6 +1,7 @@
 import "./globals.css"
-import Header from "./header"
-import Footer from "./footer"
+import Header from "@/components/header"
+import Footer from "@/components/footer"
+import Main from "@/components/main"
 
 export default function Layout({
   children,
@@ -10,7 +11,7 @@ export default function Layout({
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <Main>{children}</Main>
       <Footer />
     </>
   )

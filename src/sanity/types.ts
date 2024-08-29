@@ -39,6 +39,83 @@ export type SanityImageDimensions = {
   aspectRatio?: number
 }
 
+export type Geopoint = {
+  _type: "geopoint"
+  lat?: number
+  lng?: number
+  alt?: number
+}
+
+export type Video = {
+  _id: string
+  _type: "video"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  subtitle?: string
+  video?: {
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset"
+    }
+    _type: "file"
+  }
+  thumbnail?: {
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: "image"
+  }
+  description?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: "span"
+          _key: string
+        }>
+        style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote"
+        listItem?: "bullet"
+        markDefs?: Array<{
+          href?: string
+          _type: "link"
+          _key: string
+        }>
+        level?: number
+        _type: "block"
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: "reference"
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        caption?: string
+        _type: "customImage"
+        _key: string
+      }
+    | ({
+        _key: string
+      } & Tiktok)
+    | ({
+        _key: string
+      } & Playlist)
+  >
+}
+
 export type SanityFileAsset = {
   _id: string
   _type: "sanity.fileAsset"
@@ -59,13 +136,6 @@ export type SanityFileAsset = {
   path?: string
   url?: string
   source?: SanityAssetSourceData
-}
-
-export type Geopoint = {
-  _type: "geopoint"
-  lat?: number
-  lng?: number
-  alt?: number
 }
 
 export type BlockContent = Array<
@@ -251,8 +321,9 @@ export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
-  | SanityFileAsset
   | Geopoint
+  | Video
+  | SanityFileAsset
   | BlockContent
   | Tiktok
   | Playlist
@@ -350,6 +421,99 @@ export type PHOTOSET_QUERYResult = {
   description?: BlockContent
   slug?: Slug
 } | null
+// Variable: VIDEOS_QUERY
+// Query: *[_type=="video"] {  title,  subtitle,  description,  video{    asset->  },  thumbnail{    asset->  }}
+export type VIDEOS_QUERYResult = Array<{
+  title: string | null
+  subtitle: string | null
+  description: Array<
+    | ({
+        _key: string
+      } & Playlist)
+    | ({
+        _key: string
+      } & Tiktok)
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: "span"
+          _key: string
+        }>
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal"
+        listItem?: "bullet"
+        markDefs?: Array<{
+          href?: string
+          _type: "link"
+          _key: string
+        }>
+        level?: number
+        _type: "block"
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: "reference"
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        caption?: string
+        _type: "customImage"
+        _key: string
+      }
+  > | null
+  video: {
+    asset: {
+      _id: string
+      _type: "sanity.fileAsset"
+      _createdAt: string
+      _updatedAt: string
+      _rev: string
+      originalFilename?: string
+      label?: string
+      title?: string
+      description?: string
+      altText?: string
+      sha1hash?: string
+      extension?: string
+      mimeType?: string
+      size?: number
+      assetId?: string
+      uploadId?: string
+      path?: string
+      url?: string
+      source?: SanityAssetSourceData
+    } | null
+  } | null
+  thumbnail: {
+    asset: {
+      _id: string
+      _type: "sanity.imageAsset"
+      _createdAt: string
+      _updatedAt: string
+      _rev: string
+      originalFilename?: string
+      label?: string
+      title?: string
+      description?: string
+      altText?: string
+      sha1hash?: string
+      extension?: string
+      mimeType?: string
+      size?: number
+      assetId?: string
+      uploadId?: string
+      path?: string
+      url?: string
+      metadata?: SanityImageMetadata
+      source?: SanityAssetSourceData
+    } | null
+  } | null
+}>
 
 // Query TypeMap
 import "@sanity/client"
@@ -359,5 +523,6 @@ declare module "@sanity/client" {
     '*[_type=="photoSet"]': PHOTOSETS_QUERYResult
     '*[_type=="photoSet"&& category==$category]': PHOTOSETS_FOR_CATEGORY_QUERYResult
     '*[_type=="photoSet"&&slug.current == $slug][0]': PHOTOSET_QUERYResult
+    '*[_type=="video"] {\n  title,\n  subtitle,\n  description,\n  video{\n    asset->\n  },\n  thumbnail{\n    asset->\n  }\n}': VIDEOS_QUERYResult
   }
 }

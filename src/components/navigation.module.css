@@ -1,0 +1,116 @@
+.root {
+  --nav-height: var(--size-7);
+  height: var(--nav-height);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-3);
+}
+
+.list {
+  display: flex;
+  gap: var(--size-8);
+  padding: 0;
+}
+
+.item {
+  position: relative;
+  list-style: none;
+  display: flex;
+}
+
+.item[data-active] {
+  background-color: green;
+}
+
+.link {
+  display: block;
+  text-decoration: none;
+  color: var(--text-1);
+  white-space: nowrap;
+  position: relative;
+}
+
+.link[data-active] {
+  font-weight: var(--font-weight-2);
+}
+
+.trigger {
+  all: unset;
+  position: relative;
+}
+
+.content {
+  position: absolute;
+  top: calc(var(--size-1) + var(--nav-height));
+  left: 0;
+  box-shadow: var(--shadow-4);
+}
+
+.sub {
+  background-color: var(--surface-2);
+  border-radius: var(--radius-2);
+  padding: var(--size-2);
+}
+
+.sub .list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-1);
+}
+
+.content[data-state="open"] {
+  animation: scaleIn 500ms ease;
+}
+
+.content[data-state="closed"] {
+  animation: scaleOut 500ms ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: rotateX(-30deg) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotateX(0deg) scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: rotateX(0deg) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: rotateX(-10deg) scale(0.95);
+  }
+}
+
+.link::before {
+  content: "";
+  display: block;
+  height: 5px;
+  background: var(--accent-color);
+  position: absolute;
+  border-radius: 3px;
+  bottom: -0.2em;
+  left: 0;
+  right: 0;
+  transform: scale(0, 1);
+  transition: transform ease-in-out 250ms;
+}
+
+.link:not([data-active]):hover::before {
+  transform: scale(1, 1);
+}
+
+.link:not([data-active]):hover {
+  text-shadow: 0 0 10px var(--red-3);
+}

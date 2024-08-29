@@ -11,3 +11,15 @@ export const PHOTOSETS_FOR_CATEGORY_QUERY = defineQuery(
 export const PHOTOSET_QUERY = defineQuery(
   `*[_type=="photoSet"&&slug.current == $slug][0]`,
 )
+
+export const VIDEOS_QUERY = defineQuery(`*[_type=="video"] {
+  title,
+  subtitle,
+  description,
+  video{
+    asset->
+  },
+  thumbnail{
+    asset->
+  }
+}`)

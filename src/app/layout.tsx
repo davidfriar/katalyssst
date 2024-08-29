@@ -1,9 +1,7 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { inter, extenda } from "@/fonts/fonts"
 import { client } from "@/sanity/lib/client"
 import { SITEINFO_QUERY } from "@/sanity/lib/queries"
-
-const inter = Inter({ subsets: ["latin"] })
 
 const siteInfo = await client.fetch(SITEINFO_QUERY)
 
@@ -21,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.variable} ${extenda.variable}`}>
+        {children}
+      </body>
     </html>
   )
 }
