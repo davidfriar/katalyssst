@@ -32,4 +32,6 @@ export const VIDEOS_QUERY = defineQuery(`*[_type=="video"] {
   }
 }`)
 
-export const TEASERS_QUERY = defineQuery(`*[_type=="teaser"]`)
+export const TEASERS_QUERY = defineQuery(
+  `*[_type=="teaser"]|order(_updatedAt desc)`,
+)
