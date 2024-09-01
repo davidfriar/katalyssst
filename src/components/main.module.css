@@ -3,5 +3,5 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: var(--size-8);
+  padding-inline: var(--size-8);
 }

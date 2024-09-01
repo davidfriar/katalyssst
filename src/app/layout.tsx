@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { inter, extenda } from "@/fonts/fonts"
-import { client } from "@/sanity/lib/client"
+import { sanityFetch } from "@/sanity/lib/client"
 import { SITEINFO_QUERY } from "@/sanity/lib/queries"
 
-const siteInfo = await client.fetch(SITEINFO_QUERY)
+const siteInfo = await sanityFetch({ query: SITEINFO_QUERY })
 
 export const metadata: Metadata = {
   title: siteInfo?.title,

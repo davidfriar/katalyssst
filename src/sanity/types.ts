@@ -46,6 +46,29 @@ export type Geopoint = {
   alt?: number
 }
 
+export type Teaser = {
+  _id: string
+  _type: "teaser"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  image?: {
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    caption?: string
+    _type: "customImage"
+  }
+  link?: string
+}
+
 export type Video = {
   _id: string
   _type: "video"
@@ -211,13 +234,29 @@ export type PhotoSet = {
   _rev: string
   title?: string
   subtitle?: string
-  category?: "live" | "portraits" | "bts" | "pressShots"
+  category?: {
+    _ref: string
+    _type: "reference"
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: "category"
+  }
   photos?: Array<
     {
       _key: string
     } & CustomImage
   >
   description?: BlockContent
+  slug?: Slug
+}
+
+export type Category = {
+  _id: string
+  _type: "category"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  subtitle?: string
   slug?: Slug
 }
 
@@ -228,6 +267,7 @@ export type SiteInfo = {
   _updatedAt: string
   _rev: string
   title?: string
+  subtitle?: string
   description?: string
   footer?: string
   keywords?: Array<string>
@@ -322,6 +362,7 @@ export type AllSanitySchemaTypes =
   | SanityImagePalette
   | SanityImageDimensions
   | Geopoint
+  | Teaser
   | Video
   | SanityFileAsset
   | BlockContent
@@ -329,6 +370,7 @@ export type AllSanitySchemaTypes =
   | Playlist
   | CustomImage
   | PhotoSet
+  | Category
   | SiteInfo
   | SanityImageCrop
   | SanityImageHotspot
@@ -348,6 +390,7 @@ export type SITEINFO_QUERYResult = {
   _updatedAt: string
   _rev: string
   title?: string
+  subtitle?: string
   description?: string
   footer?: string
   keywords?: Array<string>
@@ -365,7 +408,7 @@ export type SITEINFO_QUERYResult = {
   }
 } | null
 // Variable: PHOTOSETS_QUERY
-// Query: *[_type=="photoSet"]
+// Query: *[_type=="photoSet"]{..., category->}
 export type PHOTOSETS_QUERYResult = Array<{
   _id: string
   _type: "photoSet"
@@ -374,7 +417,16 @@ export type PHOTOSETS_QUERYResult = Array<{
   _rev: string
   title?: string
   subtitle?: string
-  category?: "bts" | "live" | "portraits" | "pressShots"
+  category: {
+    _id: string
+    _type: "category"
+    _createdAt: string
+    _updatedAt: string
+    _rev: string
+    title?: string
+    subtitle?: string
+    slug?: Slug
+  } | null
   photos?: Array<
     {
       _key: string
@@ -384,7 +436,7 @@ export type PHOTOSETS_QUERYResult = Array<{
   slug?: Slug
 }>
 // Variable: PHOTOSETS_FOR_CATEGORY_QUERY
-// Query: *[_type=="photoSet"&& category==$category]
+// Query: *[_type=="photoSet"]{..., category->}[category.slug.current==$category]
 export type PHOTOSETS_FOR_CATEGORY_QUERYResult = Array<{
   _id: string
   _type: "photoSet"
@@ -393,7 +445,16 @@ export type PHOTOSETS_FOR_CATEGORY_QUERYResult = Array<{
   _rev: string
   title?: string
   subtitle?: string
-  category?: "bts" | "live" | "portraits" | "pressShots"
+  category: {
+    _id: string
+    _type: "category"
+    _createdAt: string
+    _updatedAt: string
+    _rev: string
+    title?: string
+    subtitle?: string
+    slug?: Slug
+  } | null
   photos?: Array<
     {
       _key: string
@@ -412,13 +473,42 @@ export type PHOTOSET_QUERYResult = {
   _rev: string
   title?: string
   subtitle?: string
-  category?: "bts" | "live" | "portraits" | "pressShots"
+  category?: {
+    _ref: string
+    _type: "reference"
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: "category"
+  }
   photos?: Array<
     {
       _key: string
     } & CustomImage
   >
   description?: BlockContent
+  slug?: Slug
+} | null
+// Variable: CATEGORIES_QUERY
+// Query: *[_type=="category"]
+export type CATEGORIES_QUERYResult = Array<{
+  _id: string
+  _type: "category"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  subtitle?: string
+  slug?: Slug
+}>
+// Variable: CATEGORY_QUERY
+// Query: *[_type=="category"&&slug.current==$slug][0]
+export type CATEGORY_QUERYResult = {
+  _id: string
+  _type: "category"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  subtitle?: string
   slug?: Slug
 } | null
 // Variable: VIDEOS_QUERY
@@ -514,15 +604,42 @@ export type VIDEOS_QUERYResult = Array<{
     } | null
   } | null
 }>
+// Variable: TEASERS_QUERY
+// Query: *[_type=="teaser"]
+export type TEASERS_QUERYResult = Array<{
+  _id: string
+  _type: "teaser"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  image?: {
+    asset?: {
+      _ref: string
+      _type: "reference"
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    caption?: string
+    _type: "customImage"
+  }
+  link?: string
+}>
 
 // Query TypeMap
 import "@sanity/client"
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type=="siteInfo"][0]': SITEINFO_QUERYResult
-    '*[_type=="photoSet"]': PHOTOSETS_QUERYResult
-    '*[_type=="photoSet"&& category==$category]': PHOTOSETS_FOR_CATEGORY_QUERYResult
+    '*[_type=="photoSet"]{..., category->}': PHOTOSETS_QUERYResult
+    '*[_type=="photoSet"]{..., category->}[category.slug.current==$category]': PHOTOSETS_FOR_CATEGORY_QUERYResult
     '*[_type=="photoSet"&&slug.current == $slug][0]': PHOTOSET_QUERYResult
+    '*[_type=="category"]': CATEGORIES_QUERYResult
+    '*[_type=="category"&&slug.current==$slug][0]': CATEGORY_QUERYResult
     '*[_type=="video"] {\n  title,\n  subtitle,\n  description,\n  video{\n    asset->\n  },\n  thumbnail{\n    asset->\n  }\n}': VIDEOS_QUERYResult
+    '*[_type=="teaser"]': TEASERS_QUERYResult
   }
 }

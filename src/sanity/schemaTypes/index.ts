@@ -6,6 +6,8 @@ import customImage from "./customImage"
 import playlist from "./playlist"
 import tiktok from "./tiktok"
 import video from "./video"
+import category from "./category"
+import teaser from "./teaser"
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -16,5 +18,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     tiktok,
     blockContent,
     video,
+    category,
+    teaser,
   ],
 }

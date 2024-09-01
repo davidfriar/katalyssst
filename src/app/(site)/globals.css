@@ -25,4 +25,5 @@ h1 {
 
 h2 {
   font-weight: var(--font-weight-1);
+  font-size: var(--font-size-1);
 }

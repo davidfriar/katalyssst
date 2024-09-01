@@ -24,18 +24,10 @@ const photoSet = {
       title: "Category",
       description:
         "What kind of photo set is this? This will determine which page it is listed on",
-      type: "string",
+      type: "reference",
+      to: [{ type: "category" }],
       validation: (rule: Rule) =>
         rule.required().error("You must choose a category"),
-      options: {
-        list: [
-          { title: "Live", value: "live" },
-          { title: "Portraits", value: "portraits" },
-          { title: "BTS", value: "bts" },
-          { title: "Press Shots", value: "pressShots" },
-        ],
-        layout: "radio",
-      },
     },
     {
       name: "photos",

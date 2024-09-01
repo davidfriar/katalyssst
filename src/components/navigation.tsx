@@ -36,7 +36,7 @@ export default function Navigation() {
         { name: "Live", href: "/photography/live" },
         { name: "Portraits", href: "/photography/portraits" },
         { name: "BTS", href: "/photography/bts" },
-        { name: "Press Shots", href: "/photography/pressShots" },
+        { name: "Press Shots", href: "/photography/press-shots" },
       ],
     },
     { name: "Videography", href: "/videography" },

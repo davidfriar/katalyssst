@@ -1,10 +1,16 @@
 import styles from "./page.module.css"
+import HomeTitleBlock from "@/components/homeTitleBlock"
+import { sanityFetch } from "@/sanity/lib/client"
+import { TEASERS_QUERY } from "@/sanity/lib/queries"
+import TeaserGallery from "@/components/teaserGallery"
 
-export default function Home() {
+export default async function Home() {
+  const teasers = await sanityFetch({ query: TEASERS_QUERY })
+
   return (
-    <div className="styles.container">
-      <h1 className={styles.title}>KATALYSSST</h1>
-      <h2 className={styles.subtitle}>selecta|shooter|social media</h2>
-    </div>
+    <>
+      <HomeTitleBlock />
+      <TeaserGallery teasers={teasers} />
+    </>
   )
 }

@@ -9,6 +9,14 @@ const siteInfo = defineType({
       name: "title",
       type: "string",
       title: "Title",
+      description:
+        "Title for your site, which will appear on the Home page and in SEO metadata",
+    },
+    {
+      name: "subtitle",
+      type: "string",
+      title: "Subtitle",
+      description: "Subtitle for your site, which will appear on the Home page",
     },
     {
       name: "description",

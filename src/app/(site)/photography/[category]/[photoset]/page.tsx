@@ -1,17 +1,17 @@
-import { client } from "@/sanity/lib/client"
+import { sanityFetch } from "@/sanity/lib/client"
 import { PHOTOSET_QUERY } from "@/sanity/lib/queries"
 import { PHOTOSETS_QUERY } from "@/sanity/lib/queries"
 import { PHOTOSET_QUERYResult } from "@/sanity/types"
 import { urlFor } from "@/sanity/lib/image"
 import ImageGallery from "@/components/imageGallery"
 import { type Photo } from "react-photo-album"
-
+import TitleBlock from "@/components/titleBlock"
 export const dynamicParams = false
 
 export async function generateStaticParams() {
-  const photoSets = await client.fetch(PHOTOSETS_QUERY)
+  const photoSets = await sanityFetch({ query: PHOTOSETS_QUERY })
   return photoSets.map((photoSet) => ({
-    category: photoSet.category,
+    category: photoSet.category?.slug?.current,
     photoset: photoSet.slug?.current,
   }))
 }
@@ -25,9 +25,8 @@ export default async function Page({
   const photos = loadPhotos(photoSet)
   return (
     <>
-      <h1>{photoSet?.title}</h1>
-      <h2>{photoSet?.subtitle}</h2>
-      <ImageGallery photos={photos} />
+      <TitleBlock title={photoSet?.title!} subtitle={photoSet?.subtitle!} />
+      <ImageGallery photos={photos} columns={4} lightbox layout="masonry" />
     </>
   )
 }
@@ -51,5 +50,8 @@ function loadPhotos(photoSet: PHOTOSET_QUERYResult): Photo[] {
 }
 
 async function fetchPhotos(photoset: string) {
-  return await client.fetch(PHOTOSET_QUERY, { slug: photoset })
+  return await sanityFetch({
+    query: PHOTOSET_QUERY,
+    params: { slug: photoset },
+  })
 }
